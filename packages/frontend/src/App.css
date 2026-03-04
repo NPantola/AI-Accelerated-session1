@@ -37,6 +37,17 @@ section {
   margin-top: 10px;
 }
 
+.search-section {
+  margin-bottom: 15px;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  display: block;
+}
+
 input {
   flex: 1;
   padding: 8px;

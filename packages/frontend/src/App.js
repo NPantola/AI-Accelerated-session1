@@ -6,6 +6,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newItem, setNewItem] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -95,24 +96,41 @@ function App() {
 
         <section className="items-section">
           <h2>Items from Database</h2>
+          <div className="search-section">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search items..."
+              className="search-input"
+            />
+          </div>
           {loading && <p>Loading data...</p>}
           {error && <p className="error">{error}</p>}
           {!loading && !error && (
             <ul>
-              {data.length > 0 ? (
-                data.map((item) => (
-                  <li key={item.id}>
-                    <span>{item.name}</span>
-                    <button 
-                      onClick={() => handleDelete(item.id)}
-                      className="delete-btn"
-                    >
-                      Delete
-                    </button>
-                  </li>
-                ))
+              {data
+                .filter(item => 
+                  item.name.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .length > 0 ? (
+                data
+                  .filter(item => 
+                    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                  .map((item) => (
+                    <li key={item.id}>
+                      <span>{item.name}</span>
+                      <button 
+                        onClick={() => handleDelete(item.id)}
+                        className="delete-btn"
+                      >
+                        Delete
+                      </button>
+                    </li>
+                  ))
               ) : (
-                <p>No items found. Add some!</p>
+                <p>{searchTerm ? 'No items match your search.' : 'No items found. Add some!'}</p>
               )}
             </ul>
           )}

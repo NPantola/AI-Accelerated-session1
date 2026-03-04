@@ -36,7 +36,18 @@ console.log('In-memory database initialized with sample data');
 // API Routes
 app.get('/api/items', (req, res) => {
   try {
-    const items = db.prepare('SELECT * FROM items ORDER BY created_at DESC').all();
+    const { search } = req.query;
+    let query = 'SELECT * FROM items';
+    let params = [];
+    
+    if (search && search.trim()) {
+      query += ' WHERE name LIKE ? COLLATE NOCASE';
+      params.push(`%${search.trim()}%`);
+    }
+    
+    query += ' ORDER BY created_at DESC';
+    
+    const items = db.prepare(query).all(...params);
     res.json(items);
   } catch (error) {
     console.error('Error fetching items:', error);
